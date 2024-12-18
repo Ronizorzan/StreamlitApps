@@ -5,10 +5,11 @@ from geneticalgorithm import geneticalgorithm as ga
 
 
 st.set_page_config(page_title="Aplicação para otimização de transporte de carga", layout="wide")
-st.title("Otimização de transporte de carga")
+st.title("Otimização de lucros em transporte de carga")
 
-def load_data(file):
-    return pd.read_csv(file, sep=";")
+@st.cache_resource
+def load_data():
+    return pd.read_csv("Itens.csv", sep=";")
 
 def fitness_function(X, data, max_weigth, max_volume):
     selected_items = data.iloc[X.astype(bool),:]
@@ -19,15 +20,14 @@ def fitness_function(X, data, max_weigth, max_volume):
     else:
         return - selected_items['VALOR'].sum()
     
-data=None
+data= load_data()
 
 
 col1, col2 = st.columns(2)
 
 with col1.expander("Carregamento dos dados"):
-    uploaded_file = st.file_uploader("Escolha o arquivo", type="csv")
-    if uploaded_file is not None:
-        data = load_data(uploaded_file)
+    if data is not None:
+        
         carregar = st.button("Carregar os Dados")
         if carregar:
             st.write(data)
